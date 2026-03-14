@@ -1,0 +1,38 @@
+{
+  "expo": {
+    "name": "McClean",
+    "slug": "mcclean",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "scheme": "mcclean",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#1B2A5C"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.mcclean.app"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1B2A5C",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "package": "com.mcclean.app",
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-localization",
+      "expo-secure-store"
+    ]
+  }
+}
