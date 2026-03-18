@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { router } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../src/lib/supabase';
 import { colors, spacing, borderRadius, fontSize } from '../../src/constants/theme';
 
@@ -23,6 +24,7 @@ export default function RegisterScreen() {
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleRegister = async () => {
     if (!email || !password || !fullName) return;
@@ -47,9 +49,6 @@ export default function RegisterScreen() {
 
     if (error) {
       Alert.alert(t('error'), error.message);
-    } else {
-      Alert.alert(t('confirm'), 'Vérifiez votre email pour confirmer votre compte');
-      router.back();
     }
   };
 
@@ -59,64 +58,93 @@ export default function RegisterScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <ScrollView contentContainerStyle={styles.scroll} keyboardShouldPersistTaps="handled">
-        <Text style={styles.title}>{t('register')}</Text>
+        <View style={styles.header}>
+          <View style={styles.logoCircle}>
+            <Ionicons name="person-add" size={32} color={colors.white} />
+          </View>
+          <Text style={styles.title}>{t('register')}</Text>
+        </View>
 
         <View style={styles.form}>
-          <TextInput
-            style={styles.input}
-            placeholder={t('profile')}
-            placeholderTextColor={colors.textSecondary}
-            value={fullName}
-            onChangeText={setFullName}
-            autoComplete="name"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t('email')}
-            placeholderTextColor={colors.textSecondary}
-            value={email}
-            onChangeText={setEmail}
-            keyboardType="email-address"
-            autoCapitalize="none"
-            autoComplete="email"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t('phone')}
-            placeholderTextColor={colors.textSecondary}
-            value={phone}
-            onChangeText={setPhone}
-            keyboardType="phone-pad"
-            autoComplete="tel"
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t('password')}
-            placeholderTextColor={colors.textSecondary}
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-          />
-          <TextInput
-            style={styles.input}
-            placeholder={t('confirm_password')}
-            placeholderTextColor={colors.textSecondary}
-            value={confirmPassword}
-            onChangeText={setConfirmPassword}
-            secureTextEntry
-          />
+          <View style={styles.inputContainer}>
+            <Ionicons name="person-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder={t('profile')}
+              placeholderTextColor={colors.textSecondary}
+              value={fullName}
+              onChangeText={setFullName}
+              autoComplete="name"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="mail-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder={t('email')}
+              placeholderTextColor={colors.textSecondary}
+              value={email}
+              onChangeText={setEmail}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              autoComplete="email"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="call-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder={t('phone')}
+              placeholderTextColor={colors.textSecondary}
+              value={phone}
+              onChangeText={setPhone}
+              keyboardType="phone-pad"
+              autoComplete="tel"
+            />
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder={t('password')}
+              placeholderTextColor={colors.textSecondary}
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+            />
+            <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+              <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color={colors.textSecondary} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.inputContainer}>
+            <Ionicons name="lock-closed-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+            <TextInput
+              style={styles.input}
+              placeholder={t('confirm_password')}
+              placeholderTextColor={colors.textSecondary}
+              value={confirmPassword}
+              onChangeText={setConfirmPassword}
+              secureTextEntry={!showPassword}
+            />
+          </View>
 
           <TouchableOpacity
             style={[styles.button, loading && styles.buttonDisabled]}
             onPress={handleRegister}
             disabled={loading}
           >
+            <Ionicons name="checkmark-circle-outline" size={20} color={colors.white} style={{ marginRight: 8 }} />
             <Text style={styles.buttonText}>
               {loading ? t('loading') : t('register')}
             </Text>
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.linkButton} onPress={() => router.back()}>
+            <Ionicons name="arrow-back" size={18} color={colors.primary} style={{ marginRight: 6 }} />
             <Text style={styles.linkText}>{t('login')}</Text>
           </TouchableOpacity>
         </View>
@@ -135,25 +163,52 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: spacing.lg,
   },
+  header: {
+    alignItems: 'center',
+    marginBottom: spacing.xl,
+  },
+  logoCircle: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
   title: {
     fontSize: fontSize.xl,
     fontWeight: 'bold',
     color: colors.primary,
-    textAlign: 'center',
-    marginBottom: spacing.xl,
   },
   form: {
     gap: spacing.md,
   },
-  input: {
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: borderRadius.md,
+    backgroundColor: colors.background,
     paddingHorizontal: spacing.md,
+  },
+  inputIcon: {
+    marginRight: spacing.sm,
+  },
+  input: {
+    flex: 1,
     paddingVertical: spacing.md,
     fontSize: fontSize.md,
     color: colors.textPrimary,
-    backgroundColor: colors.background,
+  },
+  eyeButton: {
+    padding: spacing.xs,
   },
   button: {
     backgroundColor: colors.primary,
@@ -161,6 +216,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: 'center',
     marginTop: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -173,6 +235,8 @@ const styles = StyleSheet.create({
   linkButton: {
     alignItems: 'center',
     paddingVertical: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   linkText: {
     color: colors.primary,

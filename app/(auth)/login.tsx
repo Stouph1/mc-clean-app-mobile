@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { Link } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import { supabase } from '../../src/lib/supabase';
 import { colors, spacing, borderRadius, fontSize } from '../../src/constants/theme';
 
@@ -19,6 +20,7 @@ export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async () => {
     if (!email || !password) return;
@@ -36,36 +38,50 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.header}>
-        <Text style={styles.logo}>MC CLEAN</Text>
+        <View style={styles.logoCircle}>
+          <Text style={styles.logoLetter}>M</Text>
+        </View>
+        <Text style={styles.logoText}>MC CLEAN</Text>
         <Text style={styles.slogan}>{t('slogan')}</Text>
       </View>
 
       <View style={styles.form}>
-        <TextInput
-          style={styles.input}
-          placeholder={t('email')}
-          placeholderTextColor={colors.textSecondary}
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoComplete="email"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder={t('password')}
-          placeholderTextColor={colors.textSecondary}
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          autoComplete="password"
-        />
+        <View style={styles.inputContainer}>
+          <Ionicons name="mail-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+          <TextInput
+            style={styles.input}
+            placeholder={t('email')}
+            placeholderTextColor={colors.textSecondary}
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoComplete="email"
+          />
+        </View>
+
+        <View style={styles.inputContainer}>
+          <Ionicons name="lock-closed-outline" size={20} color={colors.textSecondary} style={styles.inputIcon} />
+          <TextInput
+            style={styles.input}
+            placeholder={t('password')}
+            placeholderTextColor={colors.textSecondary}
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry={!showPassword}
+            autoComplete="password"
+          />
+          <TouchableOpacity onPress={() => setShowPassword(!showPassword)} style={styles.eyeButton}>
+            <Ionicons name={showPassword ? 'eye-off-outline' : 'eye-outline'} size={20} color={colors.textSecondary} />
+          </TouchableOpacity>
+        </View>
 
         <TouchableOpacity
           style={[styles.button, loading && styles.buttonDisabled]}
           onPress={handleLogin}
           disabled={loading}
         >
+          <Ionicons name="log-in-outline" size={20} color={colors.white} style={{ marginRight: 8 }} />
           <Text style={styles.buttonText}>
             {loading ? t('loading') : t('login')}
           </Text>
@@ -73,12 +89,13 @@ export default function LoginScreen() {
 
         <Link href="/(auth)/register" asChild>
           <TouchableOpacity style={styles.linkButton}>
+            <Ionicons name="person-add-outline" size={18} color={colors.primary} style={{ marginRight: 6 }} />
             <Text style={styles.linkText}>{t('register')}</Text>
           </TouchableOpacity>
         </Link>
 
         <Link href="/(auth)/forgot-password" asChild>
-          <TouchableOpacity style={styles.linkButton}>
+          <TouchableOpacity style={styles.forgotButton}>
             <Text style={styles.forgotText}>{t('forgot_password')}</Text>
           </TouchableOpacity>
         </Link>
@@ -98,29 +115,60 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: spacing.xxl,
   },
-  logo: {
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.md,
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
+  },
+  logoLetter: {
+    fontSize: 40,
+    fontWeight: 'bold',
+    color: colors.white,
+  },
+  logoText: {
     fontSize: fontSize.xxl,
     fontWeight: 'bold',
     color: colors.primary,
-    letterSpacing: 2,
+    letterSpacing: 3,
   },
   slogan: {
     fontSize: fontSize.sm,
     color: colors.textSecondary,
     marginTop: spacing.xs,
+    fontStyle: 'italic',
   },
   form: {
     gap: spacing.md,
   },
-  input: {
+  inputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
     borderWidth: 1,
     borderColor: colors.border,
     borderRadius: borderRadius.md,
+    backgroundColor: colors.background,
     paddingHorizontal: spacing.md,
+  },
+  inputIcon: {
+    marginRight: spacing.sm,
+  },
+  input: {
+    flex: 1,
     paddingVertical: spacing.md,
     fontSize: fontSize.md,
     color: colors.textPrimary,
-    backgroundColor: colors.background,
+  },
+  eyeButton: {
+    padding: spacing.xs,
   },
   button: {
     backgroundColor: colors.primary,
@@ -128,6 +176,13 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: 'center',
     marginTop: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    shadowColor: colors.primary,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 4,
   },
   buttonDisabled: {
     opacity: 0.6,
@@ -140,11 +195,17 @@ const styles = StyleSheet.create({
   linkButton: {
     alignItems: 'center',
     paddingVertical: spacing.sm,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   linkText: {
     color: colors.primary,
     fontSize: fontSize.md,
     fontWeight: '600',
+  },
+  forgotButton: {
+    alignItems: 'center',
+    paddingVertical: spacing.xs,
   },
   forgotText: {
     color: colors.textSecondary,

@@ -1,4 +1,5 @@
 import { View, Text, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { colors, spacing, borderRadius, fontSize } from '../../../src/constants/theme';
 
 export default function DashboardScreen() {
@@ -6,20 +7,24 @@ export default function DashboardScreen() {
     <View style={styles.container}>
       <View style={styles.row}>
         <View style={styles.statCard}>
+          <Ionicons name="cart" size={28} color={colors.primary} />
           <Text style={styles.statValue}>0</Text>
           <Text style={styles.statLabel}>Commandes</Text>
         </View>
         <View style={styles.statCard}>
+          <Ionicons name="cash" size={28} color={colors.success} />
           <Text style={styles.statValue}>0 €</Text>
           <Text style={styles.statLabel}>Chiffre d'affaires</Text>
         </View>
       </View>
       <View style={styles.row}>
         <View style={styles.statCard}>
+          <Ionicons name="people" size={28} color={colors.primaryLight} />
           <Text style={styles.statValue}>0</Text>
           <Text style={styles.statLabel}>Clients</Text>
         </View>
         <View style={styles.statCard}>
+          <Ionicons name="document-text" size={28} color={colors.warning} />
           <Text style={styles.statValue}>0</Text>
           <Text style={styles.statLabel}>Devis en attente</Text>
         </View>
@@ -45,6 +50,7 @@ const styles = StyleSheet.create({
     borderRadius: borderRadius.md,
     padding: spacing.lg,
     alignItems: 'center',
+    gap: spacing.xs,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
@@ -59,6 +65,5 @@ const styles = StyleSheet.create({
   statLabel: {
     fontSize: fontSize.sm,
     color: colors.textSecondary,
-    marginTop: spacing.xs,
   },
 });

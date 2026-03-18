@@ -1,5 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { useTranslation } from 'react-i18next';
+import { Ionicons } from '@expo/vector-icons';
 import i18n from '../../../src/i18n';
 import { supabase } from '../../../src/lib/supabase';
 import { useAuthStore } from '../../../src/stores/auth';
@@ -24,18 +25,62 @@ export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <View style={styles.infoCard}>
+        <View style={styles.avatar}>
+          <Ionicons name="person" size={40} color={colors.white} />
+        </View>
         <Text style={styles.name}>{user?.user_metadata?.full_name ?? '-'}</Text>
         <Text style={styles.email}>{user?.email ?? '-'}</Text>
       </View>
 
       <TouchableOpacity style={styles.menuItem} onPress={toggleLanguage}>
-        <Text style={styles.menuText}>{t('language')}</Text>
-        <Text style={styles.menuValue}>
-          {i18n.language === 'fr' ? t('french') : t('english')}
-        </Text>
+        <View style={styles.menuLeft}>
+          <Ionicons name="language" size={22} color={colors.primary} />
+          <Text style={styles.menuText}>{t('language')}</Text>
+        </View>
+        <View style={styles.menuRight}>
+          <Text style={styles.menuValue}>
+            {i18n.language === 'fr' ? '🇫🇷 ' + t('french') : '🇬🇧 ' + t('english')}
+          </Text>
+          <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+        </View>
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuItem}>
+        <View style={styles.menuLeft}>
+          <Ionicons name="location-outline" size={22} color={colors.primary} />
+          <Text style={styles.menuText}>{t('address')}</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuItem}>
+        <View style={styles.menuLeft}>
+          <Ionicons name="card-outline" size={22} color={colors.primary} />
+          <Text style={styles.menuText}>{t('payment')}</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuItem}>
+        <View style={styles.menuLeft}>
+          <Ionicons name="document-text-outline" size={22} color={colors.primary} />
+          <Text style={styles.menuText}>CGU & CGV</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
+      </TouchableOpacity>
+
+      <TouchableOpacity style={styles.menuItem}>
+        <View style={styles.menuLeft}>
+          <Ionicons name="shield-checkmark-outline" size={22} color={colors.primary} />
+          <Text style={styles.menuText}>
+            {i18n.language === 'fr' ? 'Politique de confidentialité' : 'Privacy policy'}
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color={colors.textSecondary} />
       </TouchableOpacity>
 
       <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={22} color={colors.white} />
         <Text style={styles.logoutText}>{t('logout')}</Text>
       </TouchableOpacity>
     </View>
@@ -55,6 +100,15 @@ const styles = StyleSheet.create({
     padding: spacing.lg,
     alignItems: 'center',
   },
+  avatar: {
+    width: 72,
+    height: 72,
+    borderRadius: 36,
+    backgroundColor: colors.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: spacing.sm,
+  },
   name: {
     fontSize: fontSize.lg,
     fontWeight: '600',
@@ -73,12 +127,22 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
+  menuLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.md,
+  },
+  menuRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: spacing.xs,
+  },
   menuText: {
     fontSize: fontSize.md,
     color: colors.textPrimary,
   },
   menuValue: {
-    fontSize: fontSize.md,
+    fontSize: fontSize.sm,
     color: colors.primaryLight,
     fontWeight: '600',
   },
@@ -88,6 +152,9 @@ const styles = StyleSheet.create({
     paddingVertical: spacing.md,
     alignItems: 'center',
     marginTop: 'auto',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    gap: spacing.sm,
   },
   logoutText: {
     color: colors.white,
