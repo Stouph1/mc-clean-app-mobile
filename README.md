@@ -74,12 +74,6 @@ cp .env.example .env
 npx expo start
 ```
 
-## Comptes de test
-
-| Role | Email | Mot de passe |
-|------|-------|-------------|
-| Client | client@mcclean-test.com | McClean2026! |
-| Admin | admin@mcclean-test.com | McClean2026! |
 
 ## Structure du projet
 
